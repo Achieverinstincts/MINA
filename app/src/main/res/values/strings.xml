@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Mina</string>
+    <string name="journal_date">Select journal date</string>
+    <string name="daily_streak">Daily streak</string>
+    <string name="open_settings">Open settings</string>
+    <string name="mascot_placeholder">Mascot placeholder</string>
+    <string name="temporary_navigation_placeholder">Temporary navigation tab placeholder</string>
+    <string name="settings">Settings</string>
+    <string name="settings_coming_soon">Settings coming soon</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="back">Back</string>
+</resources>
+
