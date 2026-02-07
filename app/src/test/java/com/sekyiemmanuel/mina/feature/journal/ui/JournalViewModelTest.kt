@@ -4,7 +4,9 @@ import com.sekyiemmanuel.mina.core.model.DailyStreakMetric
 import com.sekyiemmanuel.mina.feature.journal.domain.JournalRepository
 import java.time.LocalDate
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -56,13 +58,13 @@ class JournalViewModelTest {
     }
 
     @Test
-    fun settingsClick_emitsNavigateToSettingsEvent() = runTest {
+    fun settingsClick_emitsNavigateToSettingsEvent() = runTest(UnconfinedTestDispatcher()) {
         val viewModel = JournalViewModel(FakeJournalRepository())
 
+        val event = async { viewModel.navEvents.first() }
         viewModel.onEvent(JournalUiEvent.SettingsClicked)
-        val event = viewModel.navEvents.first()
 
-        assertEquals(JournalNavEvent.NavigateToSettings, event)
+        assertEquals(JournalNavEvent.NavigateToSettings, event.await())
     }
 }
 
