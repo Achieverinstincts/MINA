@@ -5,10 +5,14 @@
     <string name="open_settings">Open settings</string>
     <string name="mascot_placeholder">Mascot placeholder</string>
     <string name="temporary_navigation_placeholder">Temporary navigation tab placeholder</string>
+    <string name="journal_entry">Journal entry</string>
+    <string name="voice_input">Voice input</string>
+    <string name="camera_input">Camera input</string>
+    <string name="add_input">Add input</string>
+    <string name="keyboard_input">Show keyboard options</string>
     <string name="settings">Settings</string>
     <string name="settings_coming_soon">Settings coming soon</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="back">Back</string>
 </resources>
-

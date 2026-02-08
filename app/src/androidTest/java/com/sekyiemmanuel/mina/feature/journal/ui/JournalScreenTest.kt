@@ -16,8 +16,17 @@ class JournalScreenTest {
 
     @Test
     fun screenRenders_emptyStateAndBottomPlaceholder() {
-        composeRule.onNodeWithText("Upload your mind...").assertExists()
+        composeRule.onNodeWithText("Start logging your meals...").assertExists()
         composeRule.onNodeWithText("Temporary navigation tab placeholder").assertExists()
+    }
+
+    @Test
+    fun tappingEntryPrompt_showsTypingActionRow() {
+        composeRule.onNodeWithText("Start logging your meals...").performClick()
+        composeRule.onNodeWithContentDescription("Voice input").assertExists()
+        composeRule.onNodeWithContentDescription("Camera input").assertExists()
+        composeRule.onNodeWithContentDescription("Add input").assertExists()
+        composeRule.onNodeWithContentDescription("Show keyboard options").assertExists()
     }
 
     @Test
@@ -39,4 +48,3 @@ class JournalScreenTest {
         composeRule.onNodeWithContentDescription("Daily streak").assertExists()
     }
 }
-

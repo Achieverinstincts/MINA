@@ -1,5 +1,7 @@
 package com.sekyiemmanuel.mina.feature.journal.ui
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,13 +10,23 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.LocalFireDepartment
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Pets
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,15 +42,23 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -97,7 +117,16 @@ fun JournalScreen(
     val dailyStreakDescription = stringResource(id = R.string.daily_streak)
     val openSettingsDescription = stringResource(id = R.string.open_settings)
     val mascotDescription = stringResource(id = R.string.mascot_placeholder)
+    val entryContentDescription = stringResource(id = R.string.journal_entry)
+    val voiceInputDescription = stringResource(id = R.string.voice_input)
+    val cameraInputDescription = stringResource(id = R.string.camera_input)
+    val addInputDescription = stringResource(id = R.string.add_input)
+    val keyboardInputDescription = stringResource(id = R.string.keyboard_input)
     val bottomPlaceholderLabel = stringResource(id = R.string.temporary_navigation_placeholder)
+    var entryText by rememberSaveable { mutableStateOf("") }
+    var isEntryFocused by rememberSaveable { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     if (showDatePicker) {
         key(uiState.selectedDate) {
@@ -157,20 +186,190 @@ fun JournalScreen(
 
         Spacer(modifier = Modifier.height(42.dp))
 
-        Text(
-            text = uiState.emptyStateMessage,
-            style = MaterialTheme.typography.headlineMedium.copy(
-                fontWeight = FontWeight.Medium,
-                color = PlaceholderText,
-            ),
+        JournalEntryField(
+            text = entryText,
+            placeholder = uiState.emptyStateMessage,
+            contentDescription = entryContentDescription,
+            isFocused = isEntryFocused,
+            onTextChanged = { entryText = it },
+            onFocusChanged = { isEntryFocused = it },
+            onTap = {
+                focusRequester.requestFocus()
+                keyboardController?.show()
+            },
+            focusRequester = focusRequester,
         )
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // Reserved area for the real bottom navigation tab in a later feature.
-        TemporaryBottomPlaceholder(
-            label = bottomPlaceholderLabel,
+        if (isEntryFocused) {
+            ComposerActionsBar(
+                streak = uiState.streakCount,
+                dailyStreakDescription = dailyStreakDescription,
+                voiceInputDescription = voiceInputDescription,
+                cameraInputDescription = cameraInputDescription,
+                addInputDescription = addInputDescription,
+                keyboardInputDescription = keyboardInputDescription,
+            )
+        } else {
+            // Reserved area for the real bottom navigation tab in a later feature.
+            TemporaryBottomPlaceholder(
+                label = bottomPlaceholderLabel,
+            )
+        }
+    }
+}
+
+@Composable
+private fun JournalEntryField(
+    text: String,
+    placeholder: String,
+    contentDescription: String,
+    isFocused: Boolean,
+    onTextChanged: (String) -> Unit,
+    onFocusChanged: (Boolean) -> Unit,
+    onTap: () -> Unit,
+    focusRequester: FocusRequester,
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val cursorColor = if (isFocused) Color(0xFF94B7E6) else Color.Transparent
+
+    BasicTextField(
+        value = text,
+        onValueChange = onTextChanged,
+        textStyle = MaterialTheme.typography.headlineMedium.copy(
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onBackground,
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(focusRequester)
+            .onFocusChanged { onFocusChanged(it.isFocused) }
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onTap,
+            )
+            .semantics { this.contentDescription = contentDescription },
+        cursorBrush = SolidColor(cursorColor),
+        keyboardOptions = KeyboardOptions(
+            capitalization = KeyboardCapitalization.Sentences,
+            imeAction = ImeAction.Default,
+        ),
+        keyboardActions = KeyboardActions(),
+        decorationBox = { innerTextField ->
+            if (text.isEmpty()) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    innerTextField()
+                    Text(
+                        text = placeholder,
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            fontWeight = FontWeight.Medium,
+                            color = PlaceholderText,
+                        ),
+                    )
+                }
+            } else {
+                innerTextField()
+            }
+        },
+    )
+}
+
+@Composable
+private fun ComposerActionsBar(
+    streak: Int,
+    dailyStreakDescription: String,
+    voiceInputDescription: String,
+    cameraInputDescription: String,
+    addInputDescription: String,
+    keyboardInputDescription: String,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .imePadding()
+            .padding(bottom = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Surface(
+            shape = RoundedCornerShape(28.dp),
+            color = Color.White,
+            shadowElevation = 0.dp,
+            modifier = Modifier
+                .width(116.dp)
+                .height(52.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.LocalFireDepartment,
+                    contentDescription = dailyStreakDescription,
+                    tint = AccentFlame,
+                    modifier = Modifier.size(22.dp),
+                )
+                Text(
+                    text = streak.toString(),
+                    modifier = Modifier.padding(start = 4.dp),
+                    style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                )
+            }
+        }
+
+        CircleActionButton(
+            icon = Icons.Filled.Mic,
+            contentDescription = voiceInputDescription,
+            tint = Color(0xFF3B79E5),
         )
+        CircleActionButton(
+            icon = Icons.Filled.CameraAlt,
+            contentDescription = cameraInputDescription,
+            tint = Color(0xFF9A56CF),
+        )
+        CircleActionButton(
+            icon = Icons.Filled.Add,
+            contentDescription = addInputDescription,
+            tint = Color(0xFFE6962E),
+        )
+        IconButton(
+            onClick = {},
+            modifier = Modifier.size(48.dp),
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Keyboard,
+                contentDescription = keyboardInputDescription,
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.size(28.dp),
+            )
+        }
+    }
+}
+
+@Composable
+private fun CircleActionButton(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    contentDescription: String,
+    tint: Color,
+) {
+    Surface(
+        onClick = {},
+        shape = CircleShape,
+        color = Color.White,
+        shadowElevation = 0.dp,
+        modifier = Modifier.size(52.dp),
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Icon(
+                imageVector = icon,
+                contentDescription = contentDescription,
+                tint = tint,
+                modifier = Modifier.size(28.dp),
+            )
+        }
     }
 }
 

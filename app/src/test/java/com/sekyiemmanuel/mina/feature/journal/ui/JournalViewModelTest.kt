@@ -27,7 +27,7 @@ class JournalViewModelTest {
 
         assertEquals("Today", state.dateLabel)
         assertEquals(0, state.streakCount)
-        assertEquals("Upload your mind...", state.emptyStateMessage)
+        assertEquals("Start logging your meals...", state.emptyStateMessage)
     }
 
     @Test
