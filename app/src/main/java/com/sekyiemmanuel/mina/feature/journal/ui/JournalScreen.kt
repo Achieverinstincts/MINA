@@ -293,6 +293,7 @@ private fun JournalEntryField(
                             fontSize = 22.sp,
                         ),
                     )
+                }
                 innerTextField()
             }
         },
