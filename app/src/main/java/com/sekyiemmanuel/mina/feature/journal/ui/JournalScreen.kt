@@ -1,6 +1,5 @@
 package com.sekyiemmanuel.mina.feature.journal.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocalFireDepartment
@@ -134,7 +132,7 @@ fun JournalScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp, vertical = 24.dp),
+            .padding(start = 20.dp, top = 12.dp, end = 20.dp, bottom = 24.dp),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -162,7 +160,7 @@ fun JournalScreen(
         Text(
             text = uiState.emptyStateMessage,
             style = MaterialTheme.typography.headlineMedium.copy(
-                fontWeight = FontWeight.SemiBold,
+                fontWeight = FontWeight.Medium,
                 color = PlaceholderText,
             ),
         )
@@ -181,7 +179,6 @@ private fun MascotPlaceholder(description: String) {
     Box(
         modifier = Modifier
             .size(60.dp)
-            .background(color = Color.White, shape = CircleShape)
             .semantics { contentDescription = description },
         contentAlignment = Alignment.Center,
     ) {
@@ -204,13 +201,13 @@ private fun DatePill(
         onClick = onClick,
         shape = RoundedCornerShape(28.dp),
         color = Color.White,
-        shadowElevation = 1.dp,
+        shadowElevation = 0.dp,
         modifier = Modifier
             .height(56.dp)
             .semantics { this.contentDescription = contentDescription },
     ) {
         Box(
-            modifier = Modifier.padding(horizontal = 36.dp),
+            modifier = Modifier.padding(horizontal = 24.dp),
             contentAlignment = Alignment.Center,
         ) {
             Text(
@@ -233,21 +230,21 @@ private fun StatusPill(
     Surface(
         shape = RoundedCornerShape(28.dp),
         color = Color.White,
-        shadowElevation = 1.dp,
+        shadowElevation = 0.dp,
     ) {
         Row(
-            modifier = Modifier.padding(start = 16.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
+            modifier = Modifier.padding(start = 12.dp, end = 4.dp, top = 2.dp, bottom = 2.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 imageVector = Icons.Filled.LocalFireDepartment,
                 contentDescription = streakContentDescription,
                 tint = AccentFlame,
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier.size(22.dp),
             )
             Text(
                 text = streak.toString(),
-                modifier = Modifier.padding(start = 6.dp, end = 6.dp),
+                modifier = Modifier.padding(start = 4.dp, end = 4.dp),
                 style = MaterialTheme.typography.headlineSmall.copy(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -255,7 +252,7 @@ private fun StatusPill(
             )
             IconButton(
                 onClick = onSettingsClick,
-                modifier = Modifier.size(48.dp),
+                modifier = Modifier.size(44.dp),
             ) {
                 Icon(
                     imageVector = Icons.Filled.Settings,
@@ -272,11 +269,11 @@ private fun TemporaryBottomPlaceholder(label: String) {
     Surface(
         color = Color.White,
         shape = RoundedCornerShape(40.dp),
-        shadowElevation = 1.dp,
+        shadowElevation = 0.dp,
         modifier = Modifier
             .fillMaxWidth()
-            .height(90.dp)
-            .padding(horizontal = 6.dp, vertical = 8.dp),
+            .height(84.dp)
+            .padding(horizontal = 6.dp, vertical = 4.dp),
     ) {
         Box(
             modifier = Modifier
@@ -288,7 +285,7 @@ private fun TemporaryBottomPlaceholder(label: String) {
                 text = label,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyLarge.copy(
-                    fontSize = 18.sp,
+                    fontSize = 17.sp,
                     color = PlaceholderText,
                 ),
             )
