@@ -30,6 +30,16 @@ class JournalScreenTest {
     }
 
     @Test
+    fun micClick_showsVoiceRecordingBarWithConfirmAndCancel() {
+        composeRule.onNodeWithText("Start logging your meals...").performClick()
+        composeRule.onNodeWithContentDescription("Voice input").performClick()
+
+        composeRule.onNodeWithContentDescription("Voice recording waveform").assertExists()
+        composeRule.onNodeWithContentDescription("Accept voice recording").assertExists()
+        composeRule.onNodeWithContentDescription("Discard voice recording").assertExists()
+    }
+
+    @Test
     fun datePillClick_opensDatePickerDialog() {
         composeRule.onNodeWithContentDescription("Select journal date").performClick()
         composeRule.onNodeWithText("Confirm").assertExists()

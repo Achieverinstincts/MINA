@@ -1,5 +1,6 @@
 package com.sekyiemmanuel.mina.feature.journal.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +19,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Mic
@@ -69,6 +72,7 @@ import com.sekyiemmanuel.mina.core.ui.theme.PlaceholderText
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import kotlin.math.abs
 
 @Composable
 fun JournalRoute(
@@ -121,9 +125,13 @@ fun JournalScreen(
     val cameraInputDescription = stringResource(id = R.string.camera_input)
     val addInputDescription = stringResource(id = R.string.add_input)
     val keyboardInputDescription = stringResource(id = R.string.keyboard_input)
+    val voiceRecordingWaveformDescription = stringResource(id = R.string.voice_recording_waveform)
+    val voiceAcceptDescription = stringResource(id = R.string.accept_voice_recording)
+    val voiceCancelDescription = stringResource(id = R.string.discard_voice_recording)
     val bottomPlaceholderLabel = stringResource(id = R.string.temporary_navigation_placeholder)
     var entryText by rememberSaveable { mutableStateOf("") }
     var isEntryFocused by rememberSaveable { mutableStateOf(false) }
+    var isVoiceRecording by rememberSaveable { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -191,7 +199,12 @@ fun JournalScreen(
             contentDescription = entryContentDescription,
             isFocused = isEntryFocused,
             onTextChanged = { entryText = it },
-            onFocusChanged = { isEntryFocused = it },
+            onFocusChanged = {
+                isEntryFocused = it
+                if (!it) {
+                    isVoiceRecording = false
+                }
+            },
             onTap = {
                 focusRequester.requestFocus()
                 keyboardController?.show()
@@ -202,12 +215,23 @@ fun JournalScreen(
         Spacer(modifier = Modifier.weight(1f))
 
         if (isEntryFocused) {
-            ComposerActionsBar(
-                voiceInputDescription = voiceInputDescription,
-                cameraInputDescription = cameraInputDescription,
-                addInputDescription = addInputDescription,
-                keyboardInputDescription = keyboardInputDescription,
-            )
+            if (isVoiceRecording) {
+                VoiceRecordingBar(
+                    waveformDescription = voiceRecordingWaveformDescription,
+                    confirmDescription = voiceAcceptDescription,
+                    cancelDescription = voiceCancelDescription,
+                    onConfirm = { isVoiceRecording = false },
+                    onCancel = { isVoiceRecording = false },
+                )
+            } else {
+                ComposerActionsBar(
+                    voiceInputDescription = voiceInputDescription,
+                    cameraInputDescription = cameraInputDescription,
+                    addInputDescription = addInputDescription,
+                    keyboardInputDescription = keyboardInputDescription,
+                    onMicClick = { isVoiceRecording = true },
+                )
+            }
         } else {
             // Reserved area for the real bottom navigation tab in a later feature.
             TemporaryBottomPlaceholder(
@@ -279,6 +303,7 @@ private fun ComposerActionsBar(
     cameraInputDescription: String,
     addInputDescription: String,
     keyboardInputDescription: String,
+    onMicClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -292,16 +317,19 @@ private fun ComposerActionsBar(
             icon = Icons.Filled.Mic,
             contentDescription = voiceInputDescription,
             tint = Color(0xFF3B79E5),
+            onClick = onMicClick,
         )
         CircleActionButton(
             icon = Icons.Filled.CameraAlt,
             contentDescription = cameraInputDescription,
             tint = Color(0xFF9A56CF),
+            onClick = {},
         )
         CircleActionButton(
             icon = Icons.Filled.Add,
             contentDescription = addInputDescription,
             tint = Color(0xFFE6962E),
+            onClick = {},
         )
         IconButton(
             onClick = {},
@@ -318,13 +346,81 @@ private fun ComposerActionsBar(
 }
 
 @Composable
+private fun VoiceRecordingBar(
+    waveformDescription: String,
+    confirmDescription: String,
+    cancelDescription: String,
+    onConfirm: () -> Unit,
+    onCancel: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .imePadding()
+            .padding(bottom = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Surface(
+            shape = RoundedCornerShape(28.dp),
+            color = Color.White,
+            shadowElevation = 0.dp,
+            modifier = Modifier
+                .weight(1f)
+                .height(52.dp)
+                .semantics { contentDescription = waveformDescription },
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                for (index in 0 until 23) {
+                    val distanceToCenter = abs(index - 11)
+                    val barHeight = (22 - distanceToCenter).coerceAtLeast(10).dp
+                    val barColor = if (distanceToCenter <= 7) {
+                        Color(0xFF131313)
+                    } else {
+                        Color(0xFF9E9E9E)
+                    }
+                    Box(
+                        modifier = Modifier
+                            .size(width = 4.dp, height = barHeight)
+                            .background(
+                                color = barColor,
+                                shape = RoundedCornerShape(3.dp),
+                            ),
+                    )
+                }
+            }
+        }
+
+        CircleActionButton(
+            icon = Icons.Filled.Check,
+            contentDescription = confirmDescription,
+            tint = Color(0xFF63B967),
+            onClick = onConfirm,
+        )
+        CircleActionButton(
+            icon = Icons.Filled.Close,
+            contentDescription = cancelDescription,
+            tint = Color(0xFFE25B50),
+            onClick = onCancel,
+        )
+    }
+}
+
+@Composable
 private fun CircleActionButton(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     contentDescription: String,
     tint: Color,
+    onClick: () -> Unit,
 ) {
     Surface(
-        onClick = {},
+        onClick = onClick,
         shape = CircleShape,
         color = Color.White,
         shadowElevation = 0.dp,

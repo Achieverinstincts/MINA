@@ -10,6 +10,9 @@
     <string name="camera_input">Camera input</string>
     <string name="add_input">Add input</string>
     <string name="keyboard_input">Show keyboard options</string>
+    <string name="voice_recording_waveform">Voice recording waveform</string>
+    <string name="accept_voice_recording">Accept voice recording</string>
+    <string name="discard_voice_recording">Discard voice recording</string>
     <string name="settings">Settings</string>
     <string name="settings_coming_soon">Settings coming soon</string>
     <string name="confirm">Confirm</string>
