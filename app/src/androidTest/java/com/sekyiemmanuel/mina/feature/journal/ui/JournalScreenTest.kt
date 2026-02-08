@@ -16,13 +16,13 @@ class JournalScreenTest {
 
     @Test
     fun screenRenders_emptyStateAndBottomPlaceholder() {
-        composeRule.onNodeWithText("Start logging your meals...").assertExists()
+        composeRule.onNodeWithText("Upload your mind...").assertExists()
         composeRule.onNodeWithText("Temporary navigation tab placeholder").assertExists()
     }
 
     @Test
     fun tappingEntryPrompt_showsTypingActionRow() {
-        composeRule.onNodeWithText("Start logging your meals...").performClick()
+        composeRule.onNodeWithText("Upload your mind...").performClick()
         composeRule.onNodeWithContentDescription("Voice input").assertExists()
         composeRule.onNodeWithContentDescription("Camera input").assertExists()
         composeRule.onNodeWithContentDescription("Add input").assertExists()
@@ -31,7 +31,7 @@ class JournalScreenTest {
 
     @Test
     fun micClick_showsVoiceRecordingBarWithConfirmAndCancel() {
-        composeRule.onNodeWithText("Start logging your meals...").performClick()
+        composeRule.onNodeWithText("Upload your mind...").performClick()
         composeRule.onNodeWithContentDescription("Voice input").performClick()
 
         composeRule.onNodeWithContentDescription("Voice recording waveform").assertExists()

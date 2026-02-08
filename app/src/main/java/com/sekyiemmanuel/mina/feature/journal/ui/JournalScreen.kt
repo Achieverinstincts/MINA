@@ -61,6 +61,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -206,6 +207,7 @@ fun JournalScreen(
                 }
             },
             onTap = {
+                isEntryFocused = true
                 focusRequester.requestFocus()
                 keyboardController?.show()
             },
@@ -258,9 +260,10 @@ private fun JournalEntryField(
     BasicTextField(
         value = text,
         onValueChange = onTextChanged,
-        textStyle = MaterialTheme.typography.headlineMedium.copy(
+        textStyle = MaterialTheme.typography.titleLarge.copy(
             fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.onBackground,
+            fontSize = 22.sp,
         ),
         modifier = Modifier
             .fillMaxWidth()
@@ -276,21 +279,20 @@ private fun JournalEntryField(
         keyboardOptions = KeyboardOptions(
             capitalization = KeyboardCapitalization.Sentences,
             imeAction = ImeAction.Default,
+            keyboardType = KeyboardType.Text,
         ),
         keyboardActions = KeyboardActions(),
         decorationBox = { innerTextField ->
-            if (text.isEmpty()) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    innerTextField()
+            Box(modifier = Modifier.fillMaxWidth()) {
+                if (text.isEmpty()) {
                     Text(
                         text = placeholder,
-                        style = MaterialTheme.typography.headlineMedium.copy(
+                        style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Medium,
                             color = PlaceholderText,
+                            fontSize = 22.sp,
                         ),
                     )
-                }
-            } else {
                 innerTextField()
             }
         },
