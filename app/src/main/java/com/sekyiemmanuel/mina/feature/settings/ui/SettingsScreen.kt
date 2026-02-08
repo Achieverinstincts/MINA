@@ -2,10 +2,9 @@ package com.sekyiemmanuel.mina.feature.settings.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +14,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -56,8 +56,18 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.sekyiemmanuel.mina.R
+
+private val PageBackground = Color(0xFFFCFBF9)
+private val CardBackground = Color.White
+private val SectionText = Color(0xFF7E7C82)
+private val SecondaryText = Color(0xFF8E8C93)
+private val LabelText = Color(0xFFAFADB1)
+private val ChevronTint = Color(0xFFBCBBC1)
+private val DividerTint = Color(0xFFE6E5E9)
 
 @Composable
 fun SettingsScreen(onBackClick: () -> Unit) {
@@ -69,6 +79,7 @@ fun SettingsScreen(onBackClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(PageBackground)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 12.dp),
     ) {
@@ -92,16 +103,19 @@ fun SettingsScreen(onBackClick: () -> Unit) {
         ) {
             Text(
                 text = stringResource(id = R.string.settings),
-                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.SemiBold),
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp,
+                ),
             )
             Spacer(modifier = Modifier.weight(1f))
             Surface(
                 shape = CircleShape,
-                color = Color.White,
+                color = CardBackground,
             ) {
                 IconButton(
                     onClick = onBackClick,
-                    modifier = Modifier.size(56.dp),
+                    modifier = Modifier.size(54.dp),
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Close,
@@ -112,7 +126,7 @@ fun SettingsScreen(onBackClick: () -> Unit) {
             }
         }
 
-        Spacer(modifier = Modifier.height(18.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         SectionTitle(title = stringResource(id = R.string.settings_profile))
         SettingsCard {
@@ -124,10 +138,11 @@ fun SettingsScreen(onBackClick: () -> Unit) {
             LabelValueRow(
                 label = stringResource(id = R.string.settings_email_label),
                 value = stringResource(id = R.string.settings_default_email),
+                allowWrap = true,
             )
         }
 
-        Spacer(modifier = Modifier.height(18.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         SectionTitle(title = stringResource(id = R.string.settings_goals_targets))
         SettingsCard {
@@ -143,7 +158,7 @@ fun SettingsScreen(onBackClick: () -> Unit) {
             )
         }
 
-        Spacer(modifier = Modifier.height(18.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         SectionTitle(title = stringResource(id = R.string.settings_preferences))
         SettingsCard {
@@ -183,7 +198,7 @@ fun SettingsScreen(onBackClick: () -> Unit) {
             )
         }
 
-        Spacer(modifier = Modifier.height(18.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         SectionTitle(title = stringResource(id = R.string.settings_sync))
         SettingsCard {
@@ -197,12 +212,12 @@ fun SettingsScreen(onBackClick: () -> Unit) {
             )
         }
 
-        Spacer(modifier = Modifier.height(18.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         SectionTitle(title = stringResource(id = R.string.settings_subscription))
         SubscriptionCard()
 
-        Spacer(modifier = Modifier.height(14.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         SingleActionCard(
             icon = Icons.Filled.Star,
@@ -210,7 +225,7 @@ fun SettingsScreen(onBackClick: () -> Unit) {
             title = stringResource(id = R.string.settings_give_feedback),
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         SingleActionCard(
             icon = Icons.Filled.Favorite,
@@ -218,7 +233,7 @@ fun SettingsScreen(onBackClick: () -> Unit) {
             title = stringResource(id = R.string.settings_about_app),
         )
 
-        Spacer(modifier = Modifier.height(18.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         SettingsCard {
             UtilityRow(
@@ -246,17 +261,17 @@ fun SettingsScreen(onBackClick: () -> Unit) {
             )
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(22.dp))
 
         Text(
             text = stringResource(id = R.string.settings_version),
             modifier = Modifier.fillMaxWidth(),
             color = Color(0xFF87848C),
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
             textAlign = TextAlign.Center,
         )
 
-        Spacer(modifier = Modifier.height(26.dp))
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }
 
@@ -264,17 +279,20 @@ fun SettingsScreen(onBackClick: () -> Unit) {
 private fun SectionTitle(title: String) {
     Text(
         text = title,
-        color = Color(0xFF7E7C82),
-        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Medium),
+        color = SectionText,
+        style = MaterialTheme.typography.titleMedium.copy(
+            fontWeight = FontWeight.Medium,
+            fontSize = 14.sp,
+        ),
         modifier = Modifier.padding(horizontal = 8.dp),
     )
-    Spacer(modifier = Modifier.height(10.dp))
+    Spacer(modifier = Modifier.height(8.dp))
 }
 
 @Composable
 private fun SettingsCard(content: @Composable ColumnScope.() -> Unit) {
     Surface(
-        color = Color.White,
+        color = CardBackground,
         shape = RoundedCornerShape(28.dp),
         shadowElevation = 0.dp,
         modifier = Modifier.fillMaxWidth(),
@@ -284,25 +302,36 @@ private fun SettingsCard(content: @Composable ColumnScope.() -> Unit) {
 }
 
 @Composable
-private fun LabelValueRow(label: String, value: String) {
+private fun LabelValueRow(
+    label: String,
+    value: String,
+    allowWrap: Boolean = false,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 86.dp)
-            .padding(horizontal = 18.dp, vertical = 18.dp),
+            .heightIn(min = 78.dp)
+            .padding(horizontal = 18.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = label,
-            color = Color(0xFFAFADB1),
-            style = MaterialTheme.typography.headlineMedium,
+            color = LabelText,
+            style = MaterialTheme.typography.titleMedium.copy(fontSize = 14.sp),
+            modifier = Modifier.width(84.dp),
         )
-        Spacer(modifier = Modifier.width(18.dp))
+        Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = value,
-            style = MaterialTheme.typography.headlineMedium,
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+            ),
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.weight(1f),
+            textAlign = TextAlign.End,
+            maxLines = if (allowWrap) 2 else 1,
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }
@@ -317,26 +346,31 @@ private fun LeadingInfoRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 88.dp)
-            .padding(horizontal = 18.dp, vertical = 16.dp),
+            .heightIn(min = 84.dp)
+            .padding(horizontal = 18.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
             tint = iconTint,
-            modifier = Modifier.size(30.dp),
+            modifier = Modifier.size(24.dp),
         )
-        Spacer(modifier = Modifier.width(14.dp))
-        Column {
+        Spacer(modifier = Modifier.width(12.dp))
+        Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.SemiBold),
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp,
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
             Text(
                 text = subtitle,
-                style = MaterialTheme.typography.headlineSmall,
-                color = Color(0xFF8E8C93),
+                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.sp),
+                color = SecondaryText,
             )
         }
     }
@@ -351,9 +385,9 @@ private fun ActionRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 84.dp)
+            .heightIn(min = 78.dp)
             .clickable(onClick = {})
-            .padding(horizontal = 18.dp, vertical = 14.dp),
+            .padding(horizontal = 18.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (icon != null) {
@@ -361,20 +395,22 @@ private fun ActionRow(
                 imageVector = icon,
                 contentDescription = null,
                 tint = iconTint,
-                modifier = Modifier.size(28.dp),
+                modifier = Modifier.size(24.dp),
             )
-            Spacer(modifier = Modifier.width(14.dp))
+            Spacer(modifier = Modifier.width(12.dp))
         }
         Text(
             text = title,
-            style = MaterialTheme.typography.headlineMedium,
+            style = MaterialTheme.typography.titleMedium.copy(fontSize = 16.sp),
             modifier = Modifier.weight(1f),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
         )
         Icon(
             imageVector = Icons.Filled.ChevronRight,
             contentDescription = null,
-            tint = Color(0xFFBCBBC1),
-            modifier = Modifier.size(30.dp),
+            tint = ChevronTint,
+            modifier = Modifier.size(28.dp),
         )
     }
 }
@@ -391,27 +427,31 @@ private fun ToggleRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 88.dp)
-            .padding(horizontal = 18.dp, vertical = 14.dp),
+            .heightIn(min = 82.dp)
+            .padding(horizontal = 18.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
             tint = iconTint,
-            modifier = Modifier.size(30.dp),
+            modifier = Modifier.size(24.dp),
         )
-        Spacer(modifier = Modifier.width(14.dp))
+        Spacer(modifier = Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.titleMedium.copy(fontSize = 16.sp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
             if (subtitle != null) {
                 Text(
                     text = subtitle,
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = Color(0xFF8E8C93),
+                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.sp),
+                    color = SecondaryText,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
         }
@@ -436,40 +476,48 @@ private fun DictationRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 84.dp)
+            .heightIn(min = 78.dp)
             .clickable(onClick = {})
-            .padding(horizontal = 18.dp, vertical = 14.dp),
+            .padding(horizontal = 18.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             imageVector = Icons.Filled.Mic,
             contentDescription = null,
             tint = Color(0xFF3E7BE8),
-            modifier = Modifier.size(30.dp),
+            modifier = Modifier.size(24.dp),
         )
-        Spacer(modifier = Modifier.width(14.dp))
+        Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = title,
-            style = MaterialTheme.typography.headlineMedium,
+            style = MaterialTheme.typography.titleMedium.copy(fontSize = 16.sp),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f),
         )
-        Spacer(modifier = Modifier.width(10.dp))
+        Spacer(modifier = Modifier.width(8.dp))
         Icon(
             imageVector = Icons.Filled.Info,
             contentDescription = null,
             tint = Color(0xFFABABB0),
-            modifier = Modifier.size(22.dp),
+            modifier = Modifier.size(20.dp),
         )
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = value,
             color = Color(0xFFABABB0),
-            style = MaterialTheme.typography.headlineMedium,
+            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
+            maxLines = 1,
+            softWrap = false,
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.End,
+            modifier = Modifier.widthIn(max = 112.dp),
         )
         Icon(
             imageVector = Icons.Filled.ChevronRight,
             contentDescription = null,
-            tint = Color(0xFFBCBBC1),
-            modifier = Modifier.size(30.dp),
+            tint = ChevronTint,
+            modifier = Modifier.size(28.dp),
         )
     }
 }
@@ -477,7 +525,7 @@ private fun DictationRow(
 @Composable
 private fun SubscriptionCard() {
     Surface(
-        color = Color.White,
+        color = CardBackground,
         shape = RoundedCornerShape(28.dp),
         shadowElevation = 0.dp,
         modifier = Modifier.fillMaxWidth(),
@@ -485,42 +533,48 @@ private fun SubscriptionCard() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 18.dp, vertical = 18.dp),
+                .padding(horizontal = 18.dp, vertical = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 imageVector = Icons.Filled.Star,
                 contentDescription = null,
                 tint = Color(0xFFB1B0B5),
-                modifier = Modifier.size(28.dp),
+                modifier = Modifier.size(24.dp),
             )
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = stringResource(id = R.string.settings_no_subscription_active),
-                    style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.SemiBold),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 16.sp,
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     text = stringResource(id = R.string.settings_upgrade_subtitle),
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = Color(0xFF8E8C93),
+                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.sp),
+                    color = SecondaryText,
                 )
             }
             Surface(
                 onClick = {},
-                shape = RoundedCornerShape(28.dp),
+                shape = RoundedCornerShape(24.dp),
                 color = Color(0xFFF2BC37),
-                modifier = Modifier.height(56.dp),
+                modifier = Modifier.height(48.dp),
             ) {
                 Box(
-                    modifier = Modifier.padding(horizontal = 28.dp),
+                    modifier = Modifier.padding(horizontal = 22.dp),
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
                         text = stringResource(id = R.string.settings_upgrade),
-                        style = MaterialTheme.typography.headlineSmall.copy(
+                        style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
                             color = Color.White,
+                            fontSize = 15.sp,
                         ),
                     )
                 }
@@ -536,7 +590,7 @@ private fun SingleActionCard(
     title: String,
 ) {
     Surface(
-        color = Color.White,
+        color = CardBackground,
         shape = RoundedCornerShape(28.dp),
         shadowElevation = 0.dp,
         modifier = Modifier.fillMaxWidth(),
@@ -544,28 +598,30 @@ private fun SingleActionCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = 92.dp)
+                .heightIn(min = 82.dp)
                 .clickable(onClick = {})
-                .padding(horizontal = 18.dp, vertical = 16.dp),
+                .padding(horizontal = 18.dp, vertical = 14.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
                 tint = iconTint,
-                modifier = Modifier.size(30.dp),
+                modifier = Modifier.size(24.dp),
             )
-            Spacer(modifier = Modifier.width(14.dp))
+            Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = title,
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.titleMedium.copy(fontSize = 16.sp),
                 modifier = Modifier.weight(1f),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
             Icon(
                 imageVector = Icons.Filled.ChevronRight,
                 contentDescription = null,
-                tint = Color(0xFFBCBBC1),
-                modifier = Modifier.size(30.dp),
+                tint = ChevronTint,
+                modifier = Modifier.size(28.dp),
             )
         }
     }
@@ -580,22 +636,24 @@ private fun UtilityRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 82.dp)
+            .heightIn(min = 76.dp)
             .clickable(onClick = {})
-            .padding(horizontal = 18.dp, vertical = 14.dp),
+            .padding(horizontal = 18.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
             tint = iconTint,
-            modifier = Modifier.size(30.dp),
+            modifier = Modifier.size(24.dp),
         )
-        Spacer(modifier = Modifier.width(14.dp))
+        Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = title,
-            style = MaterialTheme.typography.headlineMedium,
+            style = MaterialTheme.typography.titleMedium.copy(fontSize = 16.sp),
             color = iconTint,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }
@@ -603,7 +661,7 @@ private fun UtilityRow(
 @Composable
 private fun CardDivider() {
     HorizontalDivider(
-        color = Color(0xFFE6E5E9),
+        color = DividerTint,
         thickness = 1.dp,
         modifier = Modifier.padding(horizontal = 18.dp),
     )

@@ -1,8 +1,6 @@
 package com.sekyiemmanuel.mina.feature.journal.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -54,7 +52,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -134,7 +132,9 @@ fun JournalScreen(
     var isEntryFocused by rememberSaveable { mutableStateOf(false) }
     var isVoiceRecording by rememberSaveable { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
-    val keyboardController = LocalSoftwareKeyboardController.current
+    val density = LocalDensity.current
+    val isImeVisible = androidx.compose.foundation.layout.WindowInsets.ime.getBottom(density) > 0
+    val showComposer = isEntryFocused || isImeVisible
 
     if (showDatePicker) {
         key(uiState.selectedDate) {
@@ -206,17 +206,12 @@ fun JournalScreen(
                     isVoiceRecording = false
                 }
             },
-            onTap = {
-                isEntryFocused = true
-                focusRequester.requestFocus()
-                keyboardController?.show()
-            },
             focusRequester = focusRequester,
         )
 
         Spacer(modifier = Modifier.weight(1f))
 
-        if (isEntryFocused) {
+        if (showComposer) {
             if (isVoiceRecording) {
                 VoiceRecordingBar(
                     waveformDescription = voiceRecordingWaveformDescription,
@@ -251,10 +246,8 @@ private fun JournalEntryField(
     isFocused: Boolean,
     onTextChanged: (String) -> Unit,
     onFocusChanged: (Boolean) -> Unit,
-    onTap: () -> Unit,
     focusRequester: FocusRequester,
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
     val cursorColor = if (isFocused) Color(0xFF94B7E6) else Color.Transparent
 
     BasicTextField(
@@ -269,11 +262,6 @@ private fun JournalEntryField(
             .fillMaxWidth()
             .focusRequester(focusRequester)
             .onFocusChanged { onFocusChanged(it.isFocused) }
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null,
-                onClick = onTap,
-            )
             .semantics { this.contentDescription = contentDescription },
         cursorBrush = SolidColor(cursorColor),
         keyboardOptions = KeyboardOptions(
