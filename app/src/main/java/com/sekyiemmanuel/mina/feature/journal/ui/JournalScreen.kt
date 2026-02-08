@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -204,8 +203,6 @@ fun JournalScreen(
 
         if (isEntryFocused) {
             ComposerActionsBar(
-                streak = uiState.streakCount,
-                dailyStreakDescription = dailyStreakDescription,
                 voiceInputDescription = voiceInputDescription,
                 cameraInputDescription = cameraInputDescription,
                 addInputDescription = addInputDescription,
@@ -278,8 +275,6 @@ private fun JournalEntryField(
 
 @Composable
 private fun ComposerActionsBar(
-    streak: Int,
-    dailyStreakDescription: String,
     voiceInputDescription: String,
     cameraInputDescription: String,
     addInputDescription: String,
@@ -291,35 +286,8 @@ private fun ComposerActionsBar(
             .imePadding()
             .padding(bottom = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
     ) {
-        Surface(
-            shape = RoundedCornerShape(28.dp),
-            color = Color.White,
-            shadowElevation = 0.dp,
-            modifier = Modifier
-                .width(116.dp)
-                .height(52.dp),
-        ) {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.LocalFireDepartment,
-                    contentDescription = dailyStreakDescription,
-                    tint = AccentFlame,
-                    modifier = Modifier.size(22.dp),
-                )
-                Text(
-                    text = streak.toString(),
-                    modifier = Modifier.padding(start = 4.dp),
-                    style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
-                )
-            }
-        }
-
         CircleActionButton(
             icon = Icons.Filled.Mic,
             contentDescription = voiceInputDescription,
