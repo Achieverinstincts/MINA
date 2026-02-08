@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -133,7 +135,7 @@ fun JournalScreen(
     var isVoiceRecording by rememberSaveable { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
     val density = LocalDensity.current
-    val isImeVisible = androidx.compose.foundation.layout.WindowInsets.ime.getBottom(density) > 0
+    val isImeVisible = WindowInsets.ime.getBottom(density) > 0
     val showComposer = isEntryFocused || isImeVisible
 
     if (showDatePicker) {
