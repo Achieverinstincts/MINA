@@ -24,6 +24,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.Brush
 import androidx.compose.material.icons.filled.CalendarToday
@@ -83,6 +85,11 @@ import com.sekyiemmanuel.mina.core.ui.theme.CanvasBackground
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+
+private val OnboardingMutedText = Color(0xFF76737D)
+private val OnboardingCardBorder = Color(0xFFE7E5EC)
+private val OnboardingDotFuture = Color(0xFFD2D0D8)
+private val OnboardingDotComplete = AccentFlame.copy(alpha = 0.56f)
 
 @Composable
 fun OnboardingRoute(
@@ -268,13 +275,13 @@ private fun WelcomeStep(
         Spacer(modifier = Modifier.height(10.dp))
         Text(
             text = "Your private space for thoughts, reflections, and self-discovery.",
-            style = MaterialTheme.typography.bodyLarge.copy(color = Color(0xFF7B7880)),
+            style = MaterialTheme.typography.bodyLarge.copy(color = OnboardingMutedText),
             modifier = Modifier.fillMaxWidth(),
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "Built so you stick with it.",
-            style = MaterialTheme.typography.bodyLarge.copy(color = Color(0xFF7B7880)),
+            style = MaterialTheme.typography.bodyLarge.copy(color = OnboardingMutedText),
             modifier = Modifier.fillMaxWidth(),
         )
         Spacer(modifier = Modifier.weight(1f))
@@ -298,7 +305,7 @@ private fun WelcomeStep(
         TextButton(onClick = onSignIn) {
             Text(
                 text = "Already have an account? Sign in",
-                style = MaterialTheme.typography.bodyMedium.copy(color = Color(0xFF6E6B74)),
+                style = MaterialTheme.typography.bodyMedium.copy(color = OnboardingMutedText),
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -511,7 +518,7 @@ private fun AiAssistanceStep(
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = currentLevel.description,
-                    style = MaterialTheme.typography.bodyMedium.copy(color = Color(0xFF72707A)),
+                    style = MaterialTheme.typography.bodyMedium.copy(color = OnboardingMutedText),
                 )
             }
         }
@@ -881,7 +888,7 @@ private fun CreateAccountStep(
                 Text(
                     text = "Skip for now",
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color = Color(0xFF78757D),
+                        color = OnboardingMutedText,
                         fontWeight = FontWeight.Medium,
                     ),
                 )
@@ -933,7 +940,7 @@ private fun StepContainer(
         Spacer(modifier = Modifier.height(6.dp))
         Text(
             text = subtitle,
-            style = MaterialTheme.typography.bodyMedium.copy(color = Color(0xFF7F7C85)),
+            style = MaterialTheme.typography.bodyMedium.copy(color = OnboardingMutedText),
             modifier = Modifier.fillMaxWidth(),
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -990,13 +997,13 @@ private fun OnboardingOptionCard(
 ) {
     Surface(
         onClick = onClick,
-        shape = RoundedCornerShape(16.dp),
-        color = Color.White,
+        shape = RoundedCornerShape(18.dp),
+        color = if (selected) AccentFlame.copy(alpha = 0.07f) else Color.White,
         border = androidx.compose.foundation.BorderStroke(
             width = if (selected) 2.dp else 1.dp,
-            color = if (selected) AccentFlame else Color(0xFFE6E5EA),
+            color = if (selected) AccentFlame else OnboardingCardBorder,
         ),
-        shadowElevation = 0.dp,
+        shadowElevation = if (selected) 1.dp else 0.dp,
         modifier = Modifier.fillMaxWidth(),
     ) {
         Row(
@@ -1023,7 +1030,7 @@ private fun OnboardingOptionCard(
                 )
                 Text(
                     text = subtitle,
-                    style = MaterialTheme.typography.bodySmall.copy(color = Color(0xFF7E7C84)),
+                    style = MaterialTheme.typography.bodySmall.copy(color = OnboardingMutedText),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -1051,7 +1058,7 @@ private fun OnboardingToggleCard(
 ) {
     Surface(
         color = Color.White,
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(18.dp),
         shadowElevation = 0.dp,
         modifier = Modifier.fillMaxWidth(),
     ) {
@@ -1076,7 +1083,7 @@ private fun OnboardingToggleCard(
                 )
                 Text(
                     text = subtitle,
-                    style = MaterialTheme.typography.bodySmall.copy(color = Color(0xFF7E7C84)),
+                    style = MaterialTheme.typography.bodySmall.copy(color = OnboardingMutedText),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -1101,7 +1108,7 @@ private fun OnboardingChip(
         color = if (selected) AccentFlame.copy(alpha = 0.14f) else Color.White,
         border = androidx.compose.foundation.BorderStroke(
             1.dp,
-            if (selected) AccentFlame else Color(0xFFE4E3E8),
+            if (selected) AccentFlame else OnboardingCardBorder,
         ),
         shadowElevation = 0.dp,
     ) {
@@ -1128,18 +1135,18 @@ private fun OnboardingProgressIndicator(
                     shape = RoundedCornerShape(12.dp),
                     color = AccentFlame,
                     modifier = Modifier
-                        .width(22.dp)
-                        .height(7.dp),
+                        .width(28.dp)
+                        .height(8.dp),
                 ) {}
             } else {
                 Surface(
                     shape = CircleShape,
                     color = if (index < currentStep) {
-                        AccentFlame.copy(alpha = 0.55f)
+                        OnboardingDotComplete
                     } else {
-                        Color(0xFFD6D4DC)
+                        OnboardingDotFuture
                     },
-                    modifier = Modifier.size(7.dp),
+                    modifier = Modifier.size(8.dp),
                 ) {}
             }
         }
@@ -1169,12 +1176,11 @@ private fun OnboardingBottomNavigation(
                 modifier = Modifier.size(48.dp),
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    Text(
-                        text = "<",
-                        style = MaterialTheme.typography.titleLarge.copy(
-                            fontWeight = FontWeight.Medium,
-                            color = Color(0xFF6F6D75),
-                        ),
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "Back",
+                        tint = Color(0xFF6F6D75),
+                        modifier = Modifier.size(22.dp),
                     )
                 }
             }
@@ -1197,14 +1203,27 @@ private fun OnboardingBottomNavigation(
                     color = Color.White,
                 )
             } else {
-                Text(
-                    text = nextText,
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.SemiBold,
-                    ),
-                    color = Color.White,
-                    modifier = Modifier.padding(horizontal = 14.dp),
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    Text(
+                        text = nextText,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.SemiBold,
+                        ),
+                        color = Color.White,
+                        modifier = Modifier.padding(start = 14.dp),
+                    )
+                    Icon(
+                        imageVector = Icons.Filled.ArrowForward,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier
+                            .size(16.dp)
+                            .padding(end = 2.dp),
+                    )
+                }
             }
         }
     }
