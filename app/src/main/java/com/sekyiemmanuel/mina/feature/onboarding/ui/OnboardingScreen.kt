@@ -1,6 +1,8 @@
 package com.sekyiemmanuel.mina.feature.onboarding.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -69,6 +71,7 @@ import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -152,17 +155,19 @@ fun OnboardingScreen(
             .padding(horizontal = 20.dp, vertical = 12.dp),
     ) {
         if (uiState.showProgress) {
-            Row(
+            Box(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
             ) {
                 OnboardingProgressIndicator(
                     currentStep = uiState.currentStep.ordinal,
                     totalSteps = OnboardingStep.totalSteps,
+                    modifier = Modifier.align(Alignment.Center),
                 )
-                Spacer(modifier = Modifier.weight(1f))
                 if (uiState.currentStep.isOptional) {
-                    TextButton(onClick = { onEvent(OnboardingUiEvent.SkipClicked) }) {
+                    TextButton(
+                        onClick = { onEvent(OnboardingUiEvent.SkipClicked) },
+                        modifier = Modifier.align(Alignment.CenterEnd),
+                    ) {
                         Text(
                             text = "Skip",
                             style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
@@ -254,7 +259,9 @@ private fun WelcomeStep(
     onSignIn: () -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(16.dp))
@@ -284,7 +291,7 @@ private fun WelcomeStep(
             style = MaterialTheme.typography.bodyLarge.copy(color = OnboardingMutedText),
             modifier = Modifier.fillMaxWidth(),
         )
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(56.dp))
         Button(
             onClick = onGetStarted,
             shape = RoundedCornerShape(50),
@@ -308,7 +315,7 @@ private fun WelcomeStep(
                 style = MaterialTheme.typography.bodyMedium.copy(color = OnboardingMutedText),
             )
         }
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
@@ -995,16 +1002,22 @@ private fun OnboardingOptionCard(
     selected: Boolean,
     onClick: () -> Unit,
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
     Surface(
-        onClick = onClick,
         shape = RoundedCornerShape(18.dp),
-        color = if (selected) AccentFlame.copy(alpha = 0.07f) else Color.White,
+        color = Color.White,
         border = androidx.compose.foundation.BorderStroke(
-            width = if (selected) 2.dp else 1.dp,
+            width = 1.5.dp,
             color = if (selected) AccentFlame else OnboardingCardBorder,
         ),
-        shadowElevation = if (selected) 1.dp else 0.dp,
-        modifier = Modifier.fillMaxWidth(),
+        shadowElevation = 0.dp,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onClick,
+            ),
     ) {
         Row(
             modifier = Modifier
@@ -1127,8 +1140,12 @@ private fun OnboardingChip(
 private fun OnboardingProgressIndicator(
     currentStep: Int,
     totalSteps: Int,
+    modifier: Modifier = Modifier,
 ) {
-    Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(5.dp),
+    ) {
         repeat(totalSteps) { index ->
             if (index == currentStep) {
                 Surface(
