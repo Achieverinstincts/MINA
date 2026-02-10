@@ -17,7 +17,7 @@ class JournalScreenTest {
     @Test
     fun screenRenders_emptyStateAndBottomPlaceholder() {
         composeRule.onNodeWithText("Upload your mind...").assertExists()
-        composeRule.onNodeWithText("Temporary navigation tab placeholder").assertExists()
+        composeRule.onNodeWithText("Open Gallery").assertExists()
     }
 
     @Test
@@ -49,6 +49,12 @@ class JournalScreenTest {
     fun settingsClick_navigatesToSettingsScreen() {
         composeRule.onNodeWithContentDescription("Open settings").performClick()
         composeRule.onNodeWithText("Settings").assertExists()
+    }
+
+    @Test
+    fun galleryPillClick_navigatesToGalleryScreen() {
+        composeRule.onNodeWithText("Open Gallery").performClick()
+        composeRule.onNodeWithText("Gallery").assertExists()
     }
 
     @Test

@@ -11,6 +11,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.sekyiemmanuel.mina.feature.gallery.ui.GalleryRoute
 import com.sekyiemmanuel.mina.feature.journal.ui.JournalRoute
 import com.sekyiemmanuel.mina.feature.onboarding.ui.OnboardingRoute
 import com.sekyiemmanuel.mina.feature.settings.ui.SettingsScreen
@@ -51,7 +52,13 @@ fun AppNavHost(
         }
         composable(AppDestinations.JOURNAL) {
             JournalRoute(
+                onNavigateToGallery = { navController.navigate(AppDestinations.GALLERY) },
                 onNavigateToSettings = { navController.navigate(AppDestinations.SETTINGS) },
+            )
+        }
+        composable(AppDestinations.GALLERY) {
+            GalleryRoute(
+                onBackClick = { navController.popBackStack() },
             )
         }
         composable(AppDestinations.SETTINGS) {

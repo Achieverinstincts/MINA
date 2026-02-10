@@ -66,6 +66,16 @@ class JournalViewModelTest {
 
         assertEquals(JournalNavEvent.NavigateToSettings, event.await())
     }
+
+    @Test
+    fun galleryClick_emitsNavigateToGalleryEvent() = runTest(UnconfinedTestDispatcher()) {
+        val viewModel = JournalViewModel(FakeJournalRepository())
+
+        val event = async { viewModel.navEvents.first() }
+        viewModel.onEvent(JournalUiEvent.GalleryClicked)
+
+        assertEquals(JournalNavEvent.NavigateToGallery, event.await())
+    }
 }
 
 private class FakeJournalRepository : JournalRepository {

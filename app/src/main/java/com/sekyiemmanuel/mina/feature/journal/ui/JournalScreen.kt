@@ -77,6 +77,7 @@ import kotlin.math.abs
 
 @Composable
 fun JournalRoute(
+    onNavigateToGallery: () -> Unit,
     onNavigateToSettings: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: JournalViewModel = hiltViewModel(),
@@ -87,6 +88,7 @@ fun JournalRoute(
     LaunchedEffect(viewModel) {
         viewModel.navEvents.collect { event ->
             when (event) {
+                JournalNavEvent.NavigateToGallery -> onNavigateToGallery()
                 JournalNavEvent.NavigateToSettings -> onNavigateToSettings()
                 JournalNavEvent.ShowDatePicker -> showDatePicker = true
             }
@@ -101,6 +103,7 @@ fun JournalRoute(
             viewModel.onEvent(JournalUiEvent.DateSelected(selectedDate))
         },
         onDismissDatePicker = { showDatePicker = false },
+        onGalleryClick = { viewModel.onEvent(JournalUiEvent.GalleryClicked) },
         onSettingsClick = { viewModel.onEvent(JournalUiEvent.SettingsClicked) },
         modifier = modifier,
     )
@@ -114,6 +117,7 @@ fun JournalScreen(
     onDateClick: () -> Unit,
     onDateSelected: (LocalDate) -> Unit,
     onDismissDatePicker: () -> Unit,
+    onGalleryClick: () -> Unit,
     onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -129,7 +133,7 @@ fun JournalScreen(
     val voiceRecordingWaveformDescription = stringResource(id = R.string.voice_recording_waveform)
     val voiceAcceptDescription = stringResource(id = R.string.accept_voice_recording)
     val voiceCancelDescription = stringResource(id = R.string.discard_voice_recording)
-    val bottomPlaceholderLabel = stringResource(id = R.string.temporary_navigation_placeholder)
+    val bottomPlaceholderLabel = stringResource(id = R.string.open_gallery)
     var entryText by rememberSaveable { mutableStateOf("") }
     var isEntryFocused by rememberSaveable { mutableStateOf(false) }
     var isVoiceRecording by rememberSaveable { mutableStateOf(false) }
@@ -232,10 +236,7 @@ fun JournalScreen(
                 )
             }
         } else {
-            // Reserved area for the real bottom navigation tab in a later feature.
-            TemporaryBottomPlaceholder(
-                label = bottomPlaceholderLabel,
-            )
+            OpenGalleryPill(label = bottomPlaceholderLabel, onClick = onGalleryClick)
         }
     }
 }
@@ -521,8 +522,12 @@ private fun StatusPill(
 }
 
 @Composable
-private fun TemporaryBottomPlaceholder(label: String) {
+private fun OpenGalleryPill(
+    label: String,
+    onClick: () -> Unit,
+) {
     Surface(
+        onClick = onClick,
         color = Color.White,
         shape = RoundedCornerShape(40.dp),
         shadowElevation = 0.dp,
