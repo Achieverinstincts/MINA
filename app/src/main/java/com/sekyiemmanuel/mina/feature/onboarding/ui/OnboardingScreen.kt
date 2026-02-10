@@ -2,6 +2,7 @@ package com.sekyiemmanuel.mina.feature.onboarding.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -51,7 +52,6 @@ import androidx.compose.material.icons.filled.Spa
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material.icons.filled.WbSunny
-import androidx.compose.material.icons.outlined.Pets
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -76,13 +76,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sekyiemmanuel.mina.R
 import com.sekyiemmanuel.mina.core.ui.theme.AccentFlame
 import com.sekyiemmanuel.mina.core.ui.theme.CanvasBackground
 import java.time.LocalTime
@@ -265,12 +269,17 @@ private fun WelcomeStep(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-        MascotIllustration(
-            icon = Icons.Outlined.Pets,
-            size = 208.dp,
-            label = "MINA",
+        WelcomeHeroArtwork(modifier = Modifier.size(208.dp))
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            text = "MINA",
+            style = MaterialTheme.typography.labelLarge.copy(
+                fontWeight = FontWeight.SemiBold,
+                color = AccentFlame,
+                letterSpacing = 1.4.sp,
+            ),
         )
-        Spacer(modifier = Modifier.height(28.dp))
+        Spacer(modifier = Modifier.height(22.dp))
         Text(
             text = "Welcome to Mina",
             style = MaterialTheme.typography.headlineMedium.copy(
@@ -317,6 +326,16 @@ private fun WelcomeStep(
         }
         Spacer(modifier = Modifier.height(16.dp))
     }
+}
+
+@Composable
+private fun WelcomeHeroArtwork(modifier: Modifier = Modifier) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_mina_welcome_mascot),
+        contentDescription = null,
+        contentScale = ContentScale.Fit,
+        modifier = modifier,
+    )
 }
 
 @Composable
