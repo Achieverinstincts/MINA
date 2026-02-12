@@ -157,7 +157,7 @@ class InMemoryInsightRepository @Inject constructor() : InsightRepository {
         return JournalStats(
             totalEntries = allEntries.size,
             totalWords = allWords,
-            averageWordsPerEntry = if (periodEntries.isNotEmpty) periodWords / periodEntries.size else 0,
+            averageWordsPerEntry = if (periodEntries.isNotEmpty()) periodWords / periodEntries.size else 0,
             entriesThisPeriod = periodEntries.size,
             longestEntry = periodEntries.maxOfOrNull { it.words } ?: 0,
             shortestEntry = periodEntries.minOfOrNull { it.words } ?: 0,
