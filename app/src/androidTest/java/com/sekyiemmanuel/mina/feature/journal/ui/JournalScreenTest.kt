@@ -23,7 +23,7 @@ class JournalScreenTest {
         composeRule.onNodeWithText("Journal").assertExists()
         composeRule.onNodeWithText("Gallery").assertExists()
         composeRule.onNodeWithText("Inbox").assertExists()
-        composeRule.onNodeWithText("Insight").assertExists()
+        composeRule.onNodeWithText("Insights").assertExists()
     }
 
     @Test
@@ -71,7 +71,7 @@ class JournalScreenTest {
 
     @Test
     fun insightTabClick_navigatesToInsightScreen() {
-        clickBottomTab("Insight")
+        clickBottomTab("Insights")
         composeRule.onNodeWithText("Insight").assertExists()
     }
 
