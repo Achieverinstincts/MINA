@@ -17,6 +17,7 @@ class JournalScreenTest {
     @Test
     fun screenRenders_emptyStateAndBottomPlaceholder() {
         composeRule.onNodeWithText("Upload your mind...").assertExists()
+        composeRule.onNodeWithText("Open Inbox").assertExists()
         composeRule.onNodeWithText("Open Gallery").assertExists()
     }
 
@@ -55,6 +56,19 @@ class JournalScreenTest {
     fun galleryPillClick_navigatesToGalleryScreen() {
         composeRule.onNodeWithText("Open Gallery").performClick()
         composeRule.onNodeWithText("Gallery").assertExists()
+    }
+
+    @Test
+    fun inboxPillClick_navigatesToInboxScreen() {
+        composeRule.onNodeWithText("Open Inbox").performClick()
+        composeRule.onNodeWithText("Inbox").assertExists()
+    }
+
+    @Test
+    fun addInputClick_navigatesToInboxScreen() {
+        composeRule.onNodeWithText("Upload your mind...").performClick()
+        composeRule.onNodeWithContentDescription("Add input").performClick()
+        composeRule.onNodeWithText("Inbox").assertExists()
     }
 
     @Test

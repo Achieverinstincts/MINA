@@ -40,6 +40,7 @@ class JournalViewModel @Inject constructor(
         when (event) {
             JournalUiEvent.DateClicked -> emitNavEvent(JournalNavEvent.ShowDatePicker)
             is JournalUiEvent.DateSelected -> onDateSelected(event.date)
+            JournalUiEvent.InboxClicked -> emitNavEvent(JournalNavEvent.NavigateToInbox)
             JournalUiEvent.GalleryClicked -> emitNavEvent(JournalNavEvent.NavigateToGallery)
             JournalUiEvent.SettingsClicked -> emitNavEvent(JournalNavEvent.NavigateToSettings)
         }

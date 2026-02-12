@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sekyiemmanuel.mina.feature.gallery.ui.GalleryRoute
+import com.sekyiemmanuel.mina.feature.inbox.ui.InboxRoute
 import com.sekyiemmanuel.mina.feature.journal.ui.JournalRoute
 import com.sekyiemmanuel.mina.feature.onboarding.ui.OnboardingRoute
 import com.sekyiemmanuel.mina.feature.settings.ui.SettingsScreen
@@ -52,8 +53,14 @@ fun AppNavHost(
         }
         composable(AppDestinations.JOURNAL) {
             JournalRoute(
+                onNavigateToInbox = { navController.navigate(AppDestinations.INBOX) },
                 onNavigateToGallery = { navController.navigate(AppDestinations.GALLERY) },
                 onNavigateToSettings = { navController.navigate(AppDestinations.SETTINGS) },
+            )
+        }
+        composable(AppDestinations.INBOX) {
+            InboxRoute(
+                onBackClick = { navController.popBackStack() },
             )
         }
         composable(AppDestinations.GALLERY) {

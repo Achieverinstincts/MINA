@@ -3,8 +3,10 @@
     <string name="journal_date">Select journal date</string>
     <string name="daily_streak">Daily streak</string>
     <string name="open_settings">Open settings</string>
+    <string name="open_inbox">Open Inbox</string>
     <string name="open_gallery">Open Gallery</string>
     <string name="gallery">Gallery</string>
+    <string name="inbox">Inbox</string>
     <string name="gallery_filters">Filters</string>
     <string name="mascot_placeholder">Mascot placeholder</string>
     <string name="temporary_navigation_placeholder">Temporary navigation tab placeholder</string>

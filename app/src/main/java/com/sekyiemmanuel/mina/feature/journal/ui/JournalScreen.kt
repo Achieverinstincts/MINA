@@ -77,6 +77,7 @@ import kotlin.math.abs
 
 @Composable
 fun JournalRoute(
+    onNavigateToInbox: () -> Unit,
     onNavigateToGallery: () -> Unit,
     onNavigateToSettings: () -> Unit,
     modifier: Modifier = Modifier,
@@ -88,6 +89,7 @@ fun JournalRoute(
     LaunchedEffect(viewModel) {
         viewModel.navEvents.collect { event ->
             when (event) {
+                JournalNavEvent.NavigateToInbox -> onNavigateToInbox()
                 JournalNavEvent.NavigateToGallery -> onNavigateToGallery()
                 JournalNavEvent.NavigateToSettings -> onNavigateToSettings()
                 JournalNavEvent.ShowDatePicker -> showDatePicker = true
@@ -103,6 +105,7 @@ fun JournalRoute(
             viewModel.onEvent(JournalUiEvent.DateSelected(selectedDate))
         },
         onDismissDatePicker = { showDatePicker = false },
+        onInboxClick = { viewModel.onEvent(JournalUiEvent.InboxClicked) },
         onGalleryClick = { viewModel.onEvent(JournalUiEvent.GalleryClicked) },
         onSettingsClick = { viewModel.onEvent(JournalUiEvent.SettingsClicked) },
         modifier = modifier,
@@ -117,6 +120,7 @@ fun JournalScreen(
     onDateClick: () -> Unit,
     onDateSelected: (LocalDate) -> Unit,
     onDismissDatePicker: () -> Unit,
+    onInboxClick: () -> Unit,
     onGalleryClick: () -> Unit,
     onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -133,6 +137,7 @@ fun JournalScreen(
     val voiceRecordingWaveformDescription = stringResource(id = R.string.voice_recording_waveform)
     val voiceAcceptDescription = stringResource(id = R.string.accept_voice_recording)
     val voiceCancelDescription = stringResource(id = R.string.discard_voice_recording)
+    val openInboxLabel = stringResource(id = R.string.open_inbox)
     val bottomPlaceholderLabel = stringResource(id = R.string.open_gallery)
     var entryText by rememberSaveable { mutableStateOf("") }
     var isEntryFocused by rememberSaveable { mutableStateOf(false) }
@@ -233,10 +238,16 @@ fun JournalScreen(
                     addInputDescription = addInputDescription,
                     keyboardInputDescription = keyboardInputDescription,
                     onMicClick = { isVoiceRecording = true },
+                    onAddClick = onInboxClick,
                 )
             }
         } else {
-            OpenGalleryPill(label = bottomPlaceholderLabel, onClick = onGalleryClick)
+            BottomQuickLinks(
+                inboxLabel = openInboxLabel,
+                galleryLabel = bottomPlaceholderLabel,
+                onInboxClick = onInboxClick,
+                onGalleryClick = onGalleryClick,
+            )
         }
     }
 }
@@ -298,6 +309,7 @@ private fun ComposerActionsBar(
     addInputDescription: String,
     keyboardInputDescription: String,
     onMicClick: () -> Unit,
+    onAddClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -323,7 +335,7 @@ private fun ComposerActionsBar(
             icon = Icons.Filled.Add,
             contentDescription = addInputDescription,
             tint = Color(0xFFE6962E),
-            onClick = {},
+            onClick = onAddClick,
         )
         IconButton(
             onClick = {},
@@ -522,17 +534,41 @@ private fun StatusPill(
 }
 
 @Composable
-private fun OpenGalleryPill(
+private fun BottomQuickLinks(
+    inboxLabel: String,
+    galleryLabel: String,
+    onInboxClick: () -> Unit,
+    onGalleryClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        QuickLinkPill(
+            label = inboxLabel,
+            onClick = onInboxClick,
+            modifier = Modifier.weight(1f),
+        )
+        QuickLinkPill(
+            label = galleryLabel,
+            onClick = onGalleryClick,
+            modifier = Modifier.weight(1f),
+        )
+    }
+}
+
+@Composable
+private fun QuickLinkPill(
     label: String,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Surface(
         onClick = onClick,
         color = Color.White,
         shape = RoundedCornerShape(40.dp),
         shadowElevation = 0.dp,
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
             .height(84.dp)
             .padding(horizontal = 6.dp, vertical = 4.dp),
     ) {
