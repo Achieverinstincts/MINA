@@ -23,7 +23,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.Book
@@ -73,7 +72,6 @@ import com.sekyiemmanuel.mina.feature.inbox.domain.InboxItemType
 
 @Composable
 fun InboxRoute(
-    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: InboxViewModel = hiltViewModel(),
 ) {
@@ -85,7 +83,6 @@ fun InboxRoute(
 
     InboxScreen(
         uiState = uiState,
-        onBackClick = onBackClick,
         onEvent = viewModel::onEvent,
         modifier = modifier,
     )
@@ -95,7 +92,6 @@ fun InboxRoute(
 @Composable
 fun InboxScreen(
     uiState: InboxUiState,
-    onBackClick: () -> Unit,
     onEvent: (InboxUiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -127,7 +123,6 @@ fun InboxScreen(
     ) {
         InboxTopBar(
             unprocessedCount = uiState.unprocessedCount,
-            onBackClick = onBackClick,
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -183,26 +178,11 @@ fun InboxScreen(
 @Composable
 private fun InboxTopBar(
     unprocessedCount: Int,
-    onBackClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Surface(
-            onClick = onBackClick,
-            shape = CircleShape,
-            color = Color.White,
-            modifier = Modifier.size(42.dp),
-        ) {
-            Box(contentAlignment = Alignment.Center) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
-                )
-            }
-        }
-        Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = "Inbox",
             style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.SemiBold),

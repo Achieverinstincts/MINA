@@ -68,23 +68,13 @@ class JournalViewModelTest {
     }
 
     @Test
-    fun galleryClick_emitsNavigateToGalleryEvent() = runTest(UnconfinedTestDispatcher()) {
+    fun dateClick_emitsShowDatePickerEvent() = runTest(UnconfinedTestDispatcher()) {
         val viewModel = JournalViewModel(FakeJournalRepository())
 
         val event = async { viewModel.navEvents.first() }
-        viewModel.onEvent(JournalUiEvent.GalleryClicked)
+        viewModel.onEvent(JournalUiEvent.DateClicked)
 
-        assertEquals(JournalNavEvent.NavigateToGallery, event.await())
-    }
-
-    @Test
-    fun inboxClick_emitsNavigateToInboxEvent() = runTest(UnconfinedTestDispatcher()) {
-        val viewModel = JournalViewModel(FakeJournalRepository())
-
-        val event = async { viewModel.navEvents.first() }
-        viewModel.onEvent(JournalUiEvent.InboxClicked)
-
-        assertEquals(JournalNavEvent.NavigateToInbox, event.await())
+        assertEquals(JournalNavEvent.ShowDatePicker, event.await())
     }
 }
 

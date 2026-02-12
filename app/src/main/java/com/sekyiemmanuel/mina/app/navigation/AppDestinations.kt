@@ -5,5 +5,6 @@ object AppDestinations {
     const val JOURNAL = "journal"
     const val GALLERY = "gallery"
     const val INBOX = "inbox"
+    const val INSIGHT = "insight"
     const val SETTINGS = "settings"
 }

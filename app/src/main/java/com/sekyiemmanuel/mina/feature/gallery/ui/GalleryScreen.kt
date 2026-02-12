@@ -26,7 +26,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -79,7 +78,6 @@ import java.util.Locale
 
 @Composable
 fun GalleryRoute(
-    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: GalleryViewModel = hiltViewModel(),
 ) {
@@ -92,7 +90,6 @@ fun GalleryRoute(
     GalleryScreen(
         uiState = uiState,
         onEvent = viewModel::onEvent,
-        onBackClick = onBackClick,
         modifier = modifier,
     )
 }
@@ -102,7 +99,6 @@ fun GalleryRoute(
 fun GalleryScreen(
     uiState: GalleryUiState,
     onEvent: (GalleryUiEvent) -> Unit,
-    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (uiState.isShowingFilters) {
@@ -136,7 +132,6 @@ fun GalleryScreen(
     ) {
         GalleryTopBar(
             hasActiveFilters = uiState.hasActiveFilters,
-            onBackClick = onBackClick,
             onFilterClick = { onEvent(GalleryUiEvent.ToggleFiltersSheet) },
         )
 
@@ -188,31 +183,12 @@ fun GalleryScreen(
 @Composable
 private fun GalleryTopBar(
     hasActiveFilters: Boolean,
-    onBackClick: () -> Unit,
     onFilterClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Surface(
-            onClick = onBackClick,
-            shape = CircleShape,
-            color = Color.White,
-            shadowElevation = 0.dp,
-            modifier = Modifier.size(42.dp),
-        ) {
-            Box(contentAlignment = Alignment.Center) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
-                    tint = MaterialTheme.colorScheme.onSurface,
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.width(12.dp))
-
         Text(
             text = "Gallery",
             style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.SemiBold),

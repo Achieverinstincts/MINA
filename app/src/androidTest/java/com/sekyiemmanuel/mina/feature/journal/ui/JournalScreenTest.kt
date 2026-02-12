@@ -1,7 +1,10 @@
 package com.sekyiemmanuel.mina.feature.journal.ui
 
 import androidx.compose.ui.test.assertExists
+import androidx.compose.ui.test.hasClickAction
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNode
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -15,10 +18,12 @@ class JournalScreenTest {
     val composeRule = createAndroidComposeRule<MainActivity>()
 
     @Test
-    fun screenRenders_emptyStateAndBottomPlaceholder() {
+    fun screenRenders_emptyStateAndBottomNavigation() {
         composeRule.onNodeWithText("Upload your mind...").assertExists()
-        composeRule.onNodeWithText("Open Inbox").assertExists()
-        composeRule.onNodeWithText("Open Gallery").assertExists()
+        composeRule.onNodeWithText("Journal").assertExists()
+        composeRule.onNodeWithText("Gallery").assertExists()
+        composeRule.onNodeWithText("Inbox").assertExists()
+        composeRule.onNodeWithText("Insight").assertExists()
     }
 
     @Test
@@ -53,22 +58,21 @@ class JournalScreenTest {
     }
 
     @Test
-    fun galleryPillClick_navigatesToGalleryScreen() {
-        composeRule.onNodeWithText("Open Gallery").performClick()
+    fun galleryTabClick_navigatesToGalleryScreen() {
+        clickBottomTab("Gallery")
         composeRule.onNodeWithText("Gallery").assertExists()
     }
 
     @Test
-    fun inboxPillClick_navigatesToInboxScreen() {
-        composeRule.onNodeWithText("Open Inbox").performClick()
+    fun inboxTabClick_navigatesToInboxScreen() {
+        clickBottomTab("Inbox")
         composeRule.onNodeWithText("Inbox").assertExists()
     }
 
     @Test
-    fun addInputClick_navigatesToInboxScreen() {
-        composeRule.onNodeWithText("Upload your mind...").performClick()
-        composeRule.onNodeWithContentDescription("Add input").performClick()
-        composeRule.onNodeWithText("Inbox").assertExists()
+    fun insightTabClick_navigatesToInsightScreen() {
+        clickBottomTab("Insight")
+        composeRule.onNodeWithText("Insight").assertExists()
     }
 
     @Test
@@ -76,5 +80,14 @@ class JournalScreenTest {
         composeRule.onNodeWithContentDescription("Select journal date").assertExists()
         composeRule.onNodeWithContentDescription("Open settings").assertExists()
         composeRule.onNodeWithContentDescription("Daily streak").assertExists()
+    }
+
+    private fun clickBottomTab(label: String) {
+        composeRule
+            .onNode(
+                matcher = hasText(label) and hasClickAction(),
+                useUnmergedTree = true,
+            )
+            .performClick()
     }
 }

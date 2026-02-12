@@ -62,7 +62,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -77,8 +76,6 @@ import kotlin.math.abs
 
 @Composable
 fun JournalRoute(
-    onNavigateToInbox: () -> Unit,
-    onNavigateToGallery: () -> Unit,
     onNavigateToSettings: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: JournalViewModel = hiltViewModel(),
@@ -89,8 +86,6 @@ fun JournalRoute(
     LaunchedEffect(viewModel) {
         viewModel.navEvents.collect { event ->
             when (event) {
-                JournalNavEvent.NavigateToInbox -> onNavigateToInbox()
-                JournalNavEvent.NavigateToGallery -> onNavigateToGallery()
                 JournalNavEvent.NavigateToSettings -> onNavigateToSettings()
                 JournalNavEvent.ShowDatePicker -> showDatePicker = true
             }
@@ -105,8 +100,6 @@ fun JournalRoute(
             viewModel.onEvent(JournalUiEvent.DateSelected(selectedDate))
         },
         onDismissDatePicker = { showDatePicker = false },
-        onInboxClick = { viewModel.onEvent(JournalUiEvent.InboxClicked) },
-        onGalleryClick = { viewModel.onEvent(JournalUiEvent.GalleryClicked) },
         onSettingsClick = { viewModel.onEvent(JournalUiEvent.SettingsClicked) },
         modifier = modifier,
     )
@@ -120,8 +113,6 @@ fun JournalScreen(
     onDateClick: () -> Unit,
     onDateSelected: (LocalDate) -> Unit,
     onDismissDatePicker: () -> Unit,
-    onInboxClick: () -> Unit,
-    onGalleryClick: () -> Unit,
     onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -137,8 +128,6 @@ fun JournalScreen(
     val voiceRecordingWaveformDescription = stringResource(id = R.string.voice_recording_waveform)
     val voiceAcceptDescription = stringResource(id = R.string.accept_voice_recording)
     val voiceCancelDescription = stringResource(id = R.string.discard_voice_recording)
-    val openInboxLabel = stringResource(id = R.string.open_inbox)
-    val bottomPlaceholderLabel = stringResource(id = R.string.open_gallery)
     var entryText by rememberSaveable { mutableStateOf("") }
     var isEntryFocused by rememberSaveable { mutableStateOf(false) }
     var isVoiceRecording by rememberSaveable { mutableStateOf(false) }
@@ -238,16 +227,9 @@ fun JournalScreen(
                     addInputDescription = addInputDescription,
                     keyboardInputDescription = keyboardInputDescription,
                     onMicClick = { isVoiceRecording = true },
-                    onAddClick = onInboxClick,
+                    onAddClick = {},
                 )
             }
-        } else {
-            BottomQuickLinks(
-                inboxLabel = openInboxLabel,
-                galleryLabel = bottomPlaceholderLabel,
-                onInboxClick = onInboxClick,
-                onGalleryClick = onGalleryClick,
-            )
         }
     }
 }
@@ -529,63 +511,6 @@ private fun StatusPill(
                     tint = MaterialTheme.colorScheme.onSurface,
                 )
             }
-        }
-    }
-}
-
-@Composable
-private fun BottomQuickLinks(
-    inboxLabel: String,
-    galleryLabel: String,
-    onInboxClick: () -> Unit,
-    onGalleryClick: () -> Unit,
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        QuickLinkPill(
-            label = inboxLabel,
-            onClick = onInboxClick,
-            modifier = Modifier.weight(1f),
-        )
-        QuickLinkPill(
-            label = galleryLabel,
-            onClick = onGalleryClick,
-            modifier = Modifier.weight(1f),
-        )
-    }
-}
-
-@Composable
-private fun QuickLinkPill(
-    label: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Surface(
-        onClick = onClick,
-        color = Color.White,
-        shape = RoundedCornerShape(40.dp),
-        shadowElevation = 0.dp,
-        modifier = modifier
-            .height(84.dp)
-            .padding(horizontal = 6.dp, vertical = 4.dp),
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 24.dp),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = label,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontSize = 17.sp,
-                    color = PlaceholderText,
-                ),
-            )
         }
     }
 }
